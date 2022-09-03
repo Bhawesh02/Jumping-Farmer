@@ -7,7 +7,7 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody playerRb ;
     public float jumpForce = 13;
     public float gravityModifier = 2.0f;
-    public bool isOnGround = true;
+    private bool isOnGround = true;
     public bool gameOver = false;
     // Start is called before the first frame update
     void Start()

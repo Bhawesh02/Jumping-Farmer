@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6522679268250728032}
   - component: {fileID: 6522679268250728033}
   - component: {fileID: 6522679268250728034}
+  - component: {fileID: 5642274528795865284}
   m_Layer: 0
   m_Name: Boulder
   m_TagString: Obstacle
@@ -128,3 +129,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 10
+--- !u!114 &5642274528795865284
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6522075661164164061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 538d149156689f54b9dc3c2cbd7faa09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
