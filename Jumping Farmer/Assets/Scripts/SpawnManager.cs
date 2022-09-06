@@ -4,8 +4,7 @@ using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
-    public GameObject onstaclePrefab;
-    public Vector3 spwanLoaction = new Vector3(25,1.3f,0);
+    public GameObject[] onstaclePrefab;
     public float spawnDelay = 2;
     public float spawnIntetval = 2;
     private PlayerControl playerControlScript;
@@ -24,8 +23,10 @@ public class SpawnManager : MonoBehaviour
     void SpawnObstacle()
     {
         if (!playerControlScript.gameOver)
-        { 
-            Instantiate(onstaclePrefab, spwanLoaction, onstaclePrefab.transform.rotation);
+        {
+            int obstacleIndex = Random.Range(0, onstaclePrefab.Length);
+            Vector3 spwanLoaction = new Vector3(34, onstaclePrefab[obstacleIndex].transform.position.y, 0);
+            Instantiate(onstaclePrefab[obstacleIndex], spwanLoaction, onstaclePrefab[obstacleIndex].transform.rotation);
         }
     }
 }
