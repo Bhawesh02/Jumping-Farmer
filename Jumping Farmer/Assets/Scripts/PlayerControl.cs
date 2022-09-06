@@ -15,7 +15,7 @@ public class PlayerControl : MonoBehaviour
     public float gravityModifier = 2.0f;
     private bool isOnGround = true;
     public bool gameOver = false;
-    private bool doubleJump = true;
+    private bool doubleJump = false;
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +29,8 @@ public class PlayerControl : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        transform.position = new Vector3(0,transform.position.y,0);
+        transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
         if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
         {
             playerRb.AddForce(Vector3.up * jumpForce,ForceMode.Impulse);
@@ -36,15 +38,17 @@ public class PlayerControl : MonoBehaviour
             isOnGround = false;
             playerAnim.SetTrigger("Jump_trig");
             playerAudio.PlayOneShot(jumpSound);
-            if (Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && doubleJump)
-            {
-                playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                doubleJump = false;
-                playerAnim.SetTrigger("Jump_trig");
-                playerAudio.PlayOneShot(jumpSound);
-            }
+            doubleJump = true;   
         }
-        if(gameOver)
+        else if (Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && doubleJump)
+        {
+            playerRb.AddForce(Vector3.up * (jumpForce/1.3f),ForceMode.Impulse);
+            Debug.Log("Double Jump");
+            playerAnim.SetTrigger("doubleJump");
+            doubleJump = false;
+            playerAudio.PlayOneShot(jumpSound);
+        }
+        if (gameOver)
         {
             dirtParticle.Stop();
             playerAnim.SetBool("Death_b", true);
@@ -56,7 +60,7 @@ public class PlayerControl : MonoBehaviour
         if(collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = true;
-            doubleJump = true;
+            Debug.Log("On Ground");
             dirtParticle.Play();
         }
         else if(collision.gameObject.CompareTag("Obstacle"))
