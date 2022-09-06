@@ -8,6 +8,8 @@ public class PlayerControl : MonoBehaviour
     private Animator playerAnim;
     public ParticleSystem explosionParticles;
     public ParticleSystem dirtParticle;
+    public AudioClip jumpSound;
+    public AudioClip crashSound;
     public float jumpForce = 13;
     public float gravityModifier = 2.0f;
     private bool isOnGround = true;
