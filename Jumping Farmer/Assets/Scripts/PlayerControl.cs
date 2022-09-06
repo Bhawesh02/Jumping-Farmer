@@ -7,10 +7,12 @@ public class PlayerControl : MonoBehaviour
     private Rigidbody playerRb ;
     private Animator playerAnim;
     private AudioSource playerAudio;
+    private MoveLeft moveLeft;
     public ParticleSystem explosionParticles;
     public ParticleSystem dirtParticle;
     public AudioClip jumpSound;
     public AudioClip crashSound;
+    private float playerScore = 0;
     public float jumpForce = 13;
     public float gravityModifier = 2.0f;
     public bool isOnGround = true;
@@ -20,10 +22,13 @@ public class PlayerControl : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        moveLeft = GameObject.Find("Background").GetComponent<MoveLeft>();
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
         playerAudio = GetComponent<AudioSource>();  
         Physics.gravity *= gravityModifier;
+        Debug.Log("Score= " + playerScore);
+        InvokeRepeating("ShowScore",1,1f);
     }
 
     // Update is called once per frame
@@ -31,6 +36,8 @@ public class PlayerControl : MonoBehaviour
     {
         transform.position = new Vector3(0,transform.position.y,0);
         transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+        playerAnim.speed = MoveLeft.speedMultiplier;
+        
         if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
         {
             playerRb.AddForce(Vector3.up * jumpForce,ForceMode.Impulse);
@@ -43,7 +50,6 @@ public class PlayerControl : MonoBehaviour
         else if (Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && doubleJump)
         {
             playerRb.AddForce(Vector3.up * (jumpForce/1.3f),ForceMode.Impulse);
-            Debug.Log("Double Jump");
             playerAnim.SetTrigger("doubleJump");
             doubleJump = false;
             playerAudio.PlayOneShot(jumpSound);
@@ -53,6 +59,14 @@ public class PlayerControl : MonoBehaviour
             dirtParticle.Stop();
             playerAnim.SetBool("Death_b", true);
             playerAnim.SetInteger("DeathType_int", 1);
+        }
+    }
+    private void ShowScore()
+    {
+        if (!gameOver)
+        {
+            playerScore += 10 * MoveLeft.speedMultiplier;
+            Debug.Log("Score= " + playerScore);
         }
     }
     private void OnCollisionEnter(Collision collision)

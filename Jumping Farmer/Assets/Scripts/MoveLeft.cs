@@ -6,7 +6,7 @@ public class MoveLeft : MonoBehaviour
 {
 
     private float speed = 10.0f;
-    private float speedMultiplier = 1;
+    static public float speedMultiplier = 1;
     private PlayerControl playerControlScript;
 
     // Start is called before the first frame update
