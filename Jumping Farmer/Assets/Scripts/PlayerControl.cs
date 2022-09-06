@@ -13,7 +13,7 @@ public class PlayerControl : MonoBehaviour
     public AudioClip crashSound;
     public float jumpForce = 13;
     public float gravityModifier = 2.0f;
-    private bool isOnGround = true;
+    public bool isOnGround = true;
     public bool gameOver = false;
     private bool doubleJump = false;
 
@@ -60,7 +60,6 @@ public class PlayerControl : MonoBehaviour
         if(collision.gameObject.CompareTag("Ground"))
         {
             isOnGround = true;
-            Debug.Log("On Ground");
             dirtParticle.Play();
         }
         else if(collision.gameObject.CompareTag("Obstacle"))
