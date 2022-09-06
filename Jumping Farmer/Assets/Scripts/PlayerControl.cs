@@ -94,7 +94,7 @@ public class PlayerControl : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ground"))
         {
-            if (initDirtAnim)
+            if (initDirtAnim && !gameOver)
             {
                 dirtParticles.Play();
             }
