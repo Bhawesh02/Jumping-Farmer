@@ -5,7 +5,7 @@ using UnityEngine;
 public class SpawnManager : MonoBehaviour
 {
     public GameObject[] onstaclePrefab;
-    public float spawnDelay = 2;
+    public float spawnDelay = 5;
     public float spawnIntetval = 2;
     private PlayerControl playerControlScript;
     // Start is called before the first frame update
@@ -22,7 +22,7 @@ public class SpawnManager : MonoBehaviour
     }
     void SpawnObstacle()
     {
-        if (!playerControlScript.gameOver)
+        if (!playerControlScript.gameOver && playerControlScript.reaStratPos)
         {
             int obstacleIndex = Random.Range(0, onstaclePrefab.Length);
             Vector3 spwanLoaction = new Vector3(34, onstaclePrefab[obstacleIndex].transform.position.y, 0);

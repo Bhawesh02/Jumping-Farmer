@@ -13,11 +13,14 @@ public class PlayerControl : MonoBehaviour
     public AudioClip jumpSound;
     public AudioClip crashSound;
     private float playerScore = 0;
+    private float walkSpeed = 1.5f;
     public float jumpForce = 13;
     public float gravityModifier = 2.0f;
     public bool isOnGround = true;
     public bool gameOver = false;
     private bool doubleJump = false;
+    public bool reaStratPos = false;
+    private bool initDirtAnim = false;
 
     // Start is called before the first frame update
     void Start()
@@ -25,7 +28,9 @@ public class PlayerControl : MonoBehaviour
         moveLeft = GameObject.Find("Background").GetComponent<MoveLeft>();
         playerRb = GetComponent<Rigidbody>();
         playerAnim = GetComponent<Animator>();
-        playerAudio = GetComponent<AudioSource>();  
+        playerAnim.speed = 0.49f;
+        playerAudio = GetComponent<AudioSource>();
+        playerAnim.SetBool("Static_b", false);
         Physics.gravity *= gravityModifier;
         Debug.Log("Score= " + playerScore);
         InvokeRepeating("ShowScore",1,1f);
@@ -33,37 +38,55 @@ public class PlayerControl : MonoBehaviour
 
     // Update is called once per frame
     void Update()
-    {
-        transform.position = new Vector3(0,transform.position.y,0);
-        transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
-        playerAnim.speed = MoveLeft.speedMultiplier;
-        
-        if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
+    {   if (transform.position.x < 0)
         {
-            playerRb.AddForce(Vector3.up * jumpForce,ForceMode.Impulse);
-            dirtParticle.Stop();
-            isOnGround = false;
-            playerAnim.SetTrigger("Jump_trig");
-            playerAudio.PlayOneShot(jumpSound);
-            doubleJump = true;   
+            transform.Translate(Vector3.forward * walkSpeed * Time.deltaTime);
+
         }
-        else if (Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && doubleJump)
+        else
         {
-            playerRb.AddForce(Vector3.up * (jumpForce/1.3f),ForceMode.Impulse);
-            playerAnim.SetTrigger("doubleJump");
-            doubleJump = false;
-            playerAudio.PlayOneShot(jumpSound);
+            reaStratPos = true;
         }
-        if (gameOver)
+
+        if (reaStratPos)
         {
-            dirtParticle.Stop();
-            playerAnim.SetBool("Death_b", true);
-            playerAnim.SetInteger("DeathType_int", 1);
+            playerAnim.SetBool("Static_b", true);
+            transform.position = new Vector3(0, transform.position.y, 0);
+            transform.rotation = Quaternion.Euler(new Vector3(0, 90, 0));
+            playerAnim.speed = MoveLeft.speedMultiplier;
+            if (!initDirtAnim)
+            {
+
+                dirtParticle.Play();
+                initDirtAnim = true;
+            }
+            if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
+            {
+                playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                dirtParticle.Stop();
+                isOnGround = false;
+                playerAnim.SetTrigger("Jump_trig");
+                playerAudio.PlayOneShot(jumpSound);
+                doubleJump = true;
+            }
+            else if (Input.GetKeyDown(KeyCode.Space) && !isOnGround && !gameOver && doubleJump)
+            {
+                playerRb.AddForce(Vector3.up * (jumpForce / 1.3f), ForceMode.Impulse);
+                playerAnim.SetTrigger("doubleJump");
+                doubleJump = false;
+                playerAudio.PlayOneShot(jumpSound);
+            }
+            if (gameOver)
+            {
+                dirtParticle.Stop();
+                playerAnim.SetBool("Death_b", true);
+                playerAnim.SetInteger("DeathType_int", 1);
+            }
         }
     }
     private void ShowScore()
     {
-        if (!gameOver)
+        if (!gameOver && reaStratPos)
         {
             playerScore += 10 * MoveLeft.speedMultiplier;
             Debug.Log("Score= " + playerScore);

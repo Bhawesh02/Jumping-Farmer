@@ -30,7 +30,7 @@ public class MoveLeft : MonoBehaviour
             speedMultiplier = 1;
         }
 
-        if (!playerControlScript.gameOver)
+        if (!playerControlScript.gameOver && playerControlScript.reaStratPos)
         {
             transform.Translate(Vector3.left * Time.deltaTime * speed * speedMultiplier);
         }
