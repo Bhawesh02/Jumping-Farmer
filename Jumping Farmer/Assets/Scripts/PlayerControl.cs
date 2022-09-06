@@ -9,7 +9,7 @@ public class PlayerControl : MonoBehaviour
     private AudioSource playerAudio;
     private MoveLeft moveLeft;
     public ParticleSystem explosionParticles;
-    public ParticleSystem dirtParticle;
+    public ParticleSystem dirtParticles;
     public AudioClip jumpSound;
     public AudioClip crashSound;
     private float playerScore = 0;
@@ -56,14 +56,13 @@ public class PlayerControl : MonoBehaviour
             playerAnim.speed = MoveLeft.speedMultiplier;
             if (!initDirtAnim)
             {
-
-                dirtParticle.Play();
+                dirtParticles.Play();
                 initDirtAnim = true;
             }
             if (Input.GetKeyDown(KeyCode.Space) && isOnGround && !gameOver)
             {
                 playerRb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-                dirtParticle.Stop();
+                dirtParticles.Stop();
                 isOnGround = false;
                 playerAnim.SetTrigger("Jump_trig");
                 playerAudio.PlayOneShot(jumpSound);
@@ -78,7 +77,6 @@ public class PlayerControl : MonoBehaviour
             }
             if (gameOver)
             {
-                dirtParticle.Stop();
                 playerAnim.SetBool("Death_b", true);
                 playerAnim.SetInteger("DeathType_int", 1);
             }
@@ -96,13 +94,17 @@ public class PlayerControl : MonoBehaviour
     {
         if(collision.gameObject.CompareTag("Ground"))
         {
+            if (initDirtAnim)
+            {
+                dirtParticles.Play();
+            }
             isOnGround = true;
-            dirtParticle.Play();
         }
         else if(collision.gameObject.CompareTag("Obstacle"))
         {
             Debug.Log("Game Over!");
             gameOver = true;
+            dirtParticles.Stop();
             explosionParticles.Play();
             playerAudio.PlayOneShot(crashSound);
         }
